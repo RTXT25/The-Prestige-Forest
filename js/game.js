@@ -5,9 +5,9 @@ var gameEnded = false;
 
 
 let modInfo = {
-	name: "The Modding Tree",
+	name: "The Prestige Forest",
 	id: "modbase",
-	pointsName: "points",
+	pointsName: "energy",
 	discordName: "",
 	discordLink: "",
 	changelogLink: "https://github.com/Acamaeda/The-Modding-Tree/blob/master/changelog.md",
@@ -23,7 +23,7 @@ let VERSION = {
 
 // Determines if it should show points/sec
 function canGenPoints(){
-	return hasUpg("c", 11)
+	return hasUpg("p", 11)
 }
 
 // Calculate points/sec!
@@ -32,7 +32,8 @@ function getPointGen() {
 		return new Decimal(0)
 
 	let gain = new Decimal(1)
-	if (hasUpg("c", 12)) gain = gain.times(upgEffect("c", 12))
+	if(hasUpg("p",12)) gain = gain.times(upgEffect("p", 12))
+	if(hasUpg("p",13)) gain = gain.times(upgEffect("p", 13))
 	return gain
 }
 
@@ -63,19 +64,19 @@ function getNextAt(layer, canMax=false, useType = null) {
 	let type = useType
 	if (!useType) type = layers[layer].type
 
-	if (tmp[layer].gainExp.eq(0)) return new Decimal(1/0)
+	if (tmp[layer].gainExp.eq(0)) return new Decimal(0)
 	if (type=="static") 
 	{
 		if (!layers[layer].canBuyMax()) canMax = false
 		let amt = player[layer].points.plus((canMax&&tmp[layer].baseAmount.gte(tmp[layer].nextAt))?tmp[layer].resetGain:0)
-		let extraCost = Decimal.pow(layers[layer].base, amt.pow(layers[layer].exponent).div(tmp[layer].gainExp)).times(tmp[layer].gainMult)
+		let extraCost = Decimal.pow(layers[layer].base, amt.pow(tmp[layer].exponent).div(tmp[layer].gainExp)).times(tmp[layer].gainMult)
 		let cost = extraCost.times(tmp[layer].requires).max(tmp[layer].requires)
 		if (layers[layer].resCeil) cost = cost.ceil()
 		return cost;
 	} else if (type=="normal"){
 		let next = tmp[layer].resetGain.add(1)
 		if (next.gte("e1e7")) next = next.div("e5e6").pow(2)
-		next = next.root(tmp[layer].gainExp.div(tmp[layer].gainMult).root(layers[layer].exponent).times(tmp[layer].requires).max(tmp[layer].requires))
+		next = next.root(tmp[layer].gainExp.div(tmp[layer].gainMult)).root(layers[layer].exponent).times(tmp[layer].requires).max(tmp[layer].requires)
 		if (layers[layer].resCeil) next = next.ceil()
 		return next;
 	} else if (type=="custom"){
