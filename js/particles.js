@@ -72,7 +72,7 @@ addLayer("p", {
             desc: "Uses gravity to create more particles",
             cost: new Decimal(50),
             effect: function() {
-                let value = new Decimal(upgEffect("p", 13)).pow((1/3))
+                let value = new Decimal(upgEffect("p", 13)).pow((.5))
                 if (value.lessThan(1)) return 1
                 return value
             },
