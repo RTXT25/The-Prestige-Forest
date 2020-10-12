@@ -81,7 +81,7 @@ addLayer("p", {
             cost: new Decimal(1000),
             effect: function() {
                 if (player.p.amtsacrificed.lessThan(1)) {return 1}
-                return player.p.amtsacrificed.pow(1.05)
+                return player.p.amtsacrificed.pow(0.95)
             }
         },
     },

@@ -303,8 +303,8 @@ function gameLoop(diff) {
 	}
 
 	if (player.p.reactor) {
-		player.p.points = player.p.points.sub(diff)
-		player.p.amtsacrificed = player.p.amtsacrificed.add(diff)
+		player.p.points = player.p.points.sub(player.p.points.div(20).times(diff))
+		player.p.amtsacrificed = player.p.amtsacrificed.add(player.p.points.div(20).times(diff))
 	}
 
 	for (layer in layers){
