@@ -5,12 +5,14 @@ addLayer("p", {
             effectDesc: "Allows you to activate the reactor, losing one particle per second but you gain a boost based on total particles lost",
             done: function() {return hasUpg("p", 21)},
             unl: function() {return hasUpg("p", 21)},
-            toggles: [["p", "reactor"]]
+            toggles: [["p", "reactor"]],
         }
     },
     startData() { return {
         unl: true,
         points: new Decimal(0),
+        reactor: false,
+        amtsacrificed: new Decimal(0),
     }},
     name: "Particles",
     color:() => "#FFFFFF",
@@ -20,7 +22,7 @@ addLayer("p", {
     baseResource: "energy",
     baseAmount() {return player.points},
 
-    requires:() => new Decimal(10),       
+    requires:() => new Decimal(10),
     type: "normal",
     exponent: 0.5,
 
@@ -76,7 +78,11 @@ addLayer("p", {
         21: {
             title: "Fission Reactor",
             desc: "Unlock the ability to split particles apart for a big energy gain buff",
-            cost: new Decimal(1000)
+            cost: new Decimal(1000),
+            effect: function() {
+                if (player.p.amtsacrificed.lessThan(1)) {return 1}
+                return player.p.amtsacrificed.pow(1.05)
+            }
         }
     }
 })

@@ -34,6 +34,7 @@ function getPointGen() {
 	let gain = new Decimal(1)
 	if(hasUpg("p",12)) gain = gain.times(upgEffect("p", 12))
 	if(hasUpg("p",13)) gain = gain.times(upgEffect("p", 13))
+	if(hasUpg("p",21)) gain = gain.times(upgEffect("p",21))
 	return gain
 }
 
@@ -299,6 +300,11 @@ function gameLoop(diff) {
 	player.points = player.points.add(tmp.pointGen.times(diff)).max(0)
 	for (layer in layers){
 		if (layers[layer].update) layers[layer].update(diff);
+	}
+
+	if (player.p.reactor) {
+		player.p.points = player.p.points.sub(diff)
+		player.p.amtsacrificed = player.p.amtsacrificed.add(diff)
 	}
 
 	for (layer in layers){
