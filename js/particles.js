@@ -38,8 +38,8 @@ addLayer("p", {
     layerShown() {return true}, 
 
     upgrades: {
-        rows: 2,
-        cols: 4,
+        rows: 1,
+        cols: 5,
         11: {
             title: "Generator",
             cost: new Decimal(1),
@@ -75,7 +75,7 @@ addLayer("p", {
                 return value
             }
         },
-        21: {
+        15: {
             title: "Fission Reactor",
             desc: "Unlock the ability to split particles apart for a big energy gain buff",
             cost: new Decimal(1000),
