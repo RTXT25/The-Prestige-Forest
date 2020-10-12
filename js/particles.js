@@ -3,8 +3,8 @@ addLayer("p", {
         0: {
             title: "The Reactor",
             effectDesc: "Allows you to activate the reactor, losing 5% if your particles per second but you gain a boost based on total particles lost",
-            done: function() {return hasUpg("p", 21)},
-            unl: function() {return hasUpg("p", 21)},
+            done: function() {return hasUpg("p", 15)},
+            unl: function() {return hasUpg("p", 15)},
             toggles: [["p", "reactor"]],
         }
     },
@@ -48,10 +48,11 @@ addLayer("p", {
         12: {
             title: "Particle Smasher",
             desc: "Particles are now being smashed together multiplying energy gain",
-            cost: new Decimal(2),
+            cost: new Decimal(1),
             effect: function() {
-                return (player.p.points.add(1).pow(0.5))
-            }
+                return (player.p.points.add(2).pow(0.5))
+            },
+            unl:function() {return hasUpg("p",11)}
         },
         13: {
             title: "Gravity",
@@ -60,10 +61,11 @@ addLayer("p", {
             effect: function() {
                 if (player.points.lessThan(1)) return 1
                 let logamt = new Decimal("1000").div(player.points.root(1.01)).add(1.05)
-                let value = player.points.log(logamt)
+                let value = player.points.log(logamt).add(2)
                 if (value.lessThan(1)) return 1
                 return value
-            }
+            },
+            unl:function() {return hasUpg("p",12)}
         },
         14: {
             title: "The Gravitator",
@@ -73,7 +75,8 @@ addLayer("p", {
                 let value = new Decimal(upgEffect("p", 13)).pow((1/3))
                 if (value.lessThan(1)) return 1
                 return value
-            }
+            },
+            unl:function() {return hasUpg("p",13)}
         },
         15: {
             title: "Fission Reactor",
@@ -82,7 +85,8 @@ addLayer("p", {
             effect: function() {
                 if (player.p.amtsacrificed.lessThan(1)) {return 1}
                 return player.p.amtsacrificed.pow(0.95)
-            }
+            },
+            unl:function() {return hasUpg("p",14)}
         },
     },
     hotkeys: [
