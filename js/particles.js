@@ -4,7 +4,8 @@ addLayer("p", {
             title: "The Reactor",
             effectDesc: "Allows you to activate the reactor, losing one particle per second but you gain a boost based on total particles lost",
             done: function() {return hasUpg("p", 21)},
-            unl: function() {return hasUpg("p", 21)}
+            unl: function() {return hasUpg("p", 21)},
+            toggles: [["p", "reactor"]]
         }
     },
     startData() { return {
@@ -24,7 +25,9 @@ addLayer("p", {
     exponent: 0.5,
 
     gainMult() {
-        return new Decimal(1)
+        let value = new Decimal(1)
+        if (hasUpg("p", 14)) value = value.times(new Decimal(upgEffect("p", 14)))
+        return value
     },
     gainExp() {
         return new Decimal(1)
@@ -34,7 +37,7 @@ addLayer("p", {
 
     upgrades: {
         rows: 2,
-        cols: 3,
+        cols: 4,
         11: {
             title: "Generator",
             cost: new Decimal(1),
@@ -56,6 +59,16 @@ addLayer("p", {
                 if (player.points.lessThan(1)) return 1
                 let logamt = new Decimal("1000").div(player.points.root(1.01)).add(1.05)
                 let value = player.points.log(logamt)
+                if (value.lessThan(1)) return 1
+                return value
+            }
+        },
+        14: {
+            title: "The Gravitator",
+            desc: "Uses gravity to create more particles",
+            cost: new Decimal(100),
+            effect: function() {
+                let value = new Decimal(upgEffect("p", 13)).pow((1/3))
                 if (value.lessThan(1)) return 1
                 return value
             }
