@@ -68,7 +68,7 @@ addLayer("p", {
         14: {
             title: "The Gravitator",
             desc: "Uses gravity to create more particles",
-            cost: new Decimal(100),
+            cost: new Decimal(50),
             effect: function() {
                 let value = new Decimal(upgEffect("p", 13)).pow((1/3))
                 if (value.lessThan(1)) return 1
