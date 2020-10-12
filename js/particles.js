@@ -62,7 +62,7 @@ addLayer("p", {
                 if (player.points.lessThan(1)) return 1
                 let logamt = new Decimal("1000").div(player.points.root(1.01)).add(1.05)
                 let value = player.points.log(logamt).add(2)
-                if (value.lessThan(1)) return 1
+                if (value.lessThan(2)) return 2
                 return value
             },
             unl:function() {return hasUpg("p",12)}
