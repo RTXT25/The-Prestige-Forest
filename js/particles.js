@@ -47,15 +47,15 @@ addLayer("p", {
         },
         12: {
             title: "Particle Smasher",
-            desc: "Particles are now being smashed toghether multiplying energy gain",
-            cost: new Decimal(5),
+            desc: "Particles are now being smashed together multiplying energy gain",
+            cost: new Decimal(2),
             effect: function() {
                 return (player.p.points.add(1).pow(0.5))
             }
         },
         13: {
             title: "Gravity",
-            desc: "Energy is now drawn towards the generator, making it stronger",
+            desc: "Energy is now drawn towards the generator, making it stronger (boost starts at around 30)",
             cost: new Decimal(10),
             effect: function() {
                 if (player.points.lessThan(1)) return 1
