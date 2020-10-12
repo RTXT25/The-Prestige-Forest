@@ -2,7 +2,7 @@ addLayer("p", {
     milestones: {
         0: {
             title: "The Reactor",
-            effectDesc: "Allows you to activate the reactor, losing one particle per second but you gain a boost based on total particles lost",
+            effectDesc: "Allows you to activate the reactor, losing 5% if your particles per second but you gain a boost based on total particles lost",
             done: function() {return hasUpg("p", 21)},
             unl: function() {return hasUpg("p", 21)},
             toggles: [["p", "reactor"]],
