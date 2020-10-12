@@ -83,6 +83,9 @@ addLayer("p", {
                 if (player.p.amtsacrificed.lessThan(1)) {return 1}
                 return player.p.amtsacrificed.pow(1.05)
             }
-        }
-    }
+        },
+    },
+    hotkeys: [
+        {key: "p", desc: "P: Reset for particles", onPress(){if (player[this.layer].unl) doReset(this.layer)}}
+    ]
 })
