@@ -4,7 +4,7 @@ addLayer("p", {
             title: "The Reactor",
             effectDesc: "Allows you to activate the reactor, losing one particle per second but you gain a boost based on total particles lost",
             done: function() {return hasUpg("p", 21)},
-            unl: false
+            unl: function() {return hasUpg("p", 21)}
         }
     },
     startData() { return {
