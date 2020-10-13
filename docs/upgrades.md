@@ -28,7 +28,7 @@ Individual upgrades can have these features:
 - title: **optional**, displayed at the top in a larger font
          It can also be a function that returns updating text. Can use basic HTML.
 
-- description: A description of the upgrade's effect. *You will also have to implement the effect where it is applied.*
+- Descriptionription: A Descriptionription of the upgrade's effect. *You will also have to implement the effect where it is applied.*
         It can also be a function that returns updating text. Can use basic HTML.
 
 - effect(): **optional**, A function that calculates and returns the current values of any bonuses from the upgrade.

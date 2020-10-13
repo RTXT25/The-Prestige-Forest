@@ -1,6 +1,6 @@
 addLayer("a",{
     startData() { return {
-        unl: function(){hasUpg("p",15)},
+        unl: function(){hasUpgrade("p",15)},
         points: new Decimal(0),
         best: 0
     }},
@@ -22,23 +22,27 @@ addLayer("a",{
     baseResource: "energy",
     canBuyMax: function() {return false},
 
-    layerShown() {return (hasUpg("p", 15)||(player.a.best.gte(1)))}, 
+    layerShown() {return (hasUpgrade("p", 15)||(player.a.best.gte(1)))}, 
     baseAmount() {return (player.points)},
     milestones: {
         0: {
-            requirementDesc: "1 Atom",
-            effectDesc: "Unlock a new row of Particle Upgrades and raise particle gain by 1.5",
+            requirementDescription: "1 Atom",
+            effectDescription: "Unlock a new row of Particle Upgrades and raise particle gain by 1.5",
             done: function() {return player.a.best.gte(1)}
         },
-        0: {
-            requirementDesc: "2 Atoms",
-            effectDesc: "Unlock a new row of Particle Upgrades and unlock atom upgrades",
-            done: function() {return player.a.best.gte(2)}
+        1: {
+            requirementDescription: "2 Atoms",
+            effectDescription: "Unlock a new row of Particle Upgrades and unlock atom upgrades",
+            done: function() {return false /*player.a.best.gte(2)*/}
         }
     },
     tabFormat: {
         "Main": {
-            
+            content: ["main-display",["prestige-button",function() {return "Compress your energy into "}], "milestones"]
+        },
+        "Not Main": {
+            unlocked: function() {return false},
+            content: ["milestones"]
         }
     }
 })
