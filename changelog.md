@@ -1,6 +1,7 @@
 #The Modding Tree changelog:
 
 ##v2.0
+Added Progress bars, which are highly customizable and can be horizontal or vertical.
 Added clickables, a more generalized variant of buyables!
 Support for multiple completions of challenges.
 Added getter/setter functions for buyable amount and such
@@ -15,7 +16,8 @@ Buyable cost can take an argument for amount of buyables, but if one is not supp
 All displays will update correctly.
 Changelog is no longer in index.html at all.
 Generation of Points now happens in the main game loop (not in a layer update function), enabled by canGenPoints in game.js
-
+Renamed many things to increase readability (see something or other for a list)
+Improved documentation based on feedback
 
 ##v1.3.5
 
@@ -94,3 +96,30 @@ parameters.
 
 #v1.0:
 - First release.
+
+
+Make it clear that anything can be a function
+
+buyables.md: cost is a Decimal
+
+Define "CSS Object" clearly in the first instance in each file
+
+Explain automagical assignments better
+
+
+"incr_order", 
+
+
+All instances of: 
+    chall -> challenge
+    unl -> unlocked
+    upg -> upgrade
+    amt -> amount
+    desc -> description
+    resCeil -> roundUpCost
+
+Challenges:
+    desc -> challengeDescription
+    reward -> rewardDescription
+    effect -> rewardEffect
+    effectDisplay -> rewardDisplay

@@ -36,8 +36,8 @@ function updateLayers(){
                 if (!isNaN(thing)){
                     layers[layer].upgrades[thing].id = thing
                     layers[layer].upgrades[thing].layer = layer
-                    if (layers[layer].upgrades[thing].unl === undefined)
-                        layers[layer].upgrades[thing].unl = true
+                    if (layers[layer].upgrades[thing].unlocked === undefined)
+                        layers[layer].upgrades[thing].unlocked = true
                 }
             }
         }
@@ -46,20 +46,20 @@ function updateLayers(){
                 if (!isNaN(thing)){
                     layers[layer].milestones[thing].id = thing
                     layers[layer].milestones[thing].layer = layer
-                    if (layers[layer].milestones[thing].unl === undefined)
-                        layers[layer].milestones[thing].unl = true
+                    if (layers[layer].milestones[thing].unlocked === undefined)
+                        layers[layer].milestones[thing].unlocked = true
                 }
             }
         }
-        if (layers[layer].challs){
-            for (thing in layers[layer].challs){
+        if (layers[layer].challenges){
+            for (thing in layers[layer].challenges){
                 if (!isNaN(thing)){
-                    layers[layer].challs[thing].id = thing
-                    layers[layer].challs[thing].layer = layer
-                    if (layers[layer].challs[thing].unl === undefined)
-                        layers[layer].challs[thing].unl = true
-                    if (layers[layer].challs[thing].completionLimit === undefined)
-                        layers[layer].challs[thing].completionLimit = 1
+                    layers[layer].challenges[thing].id = thing
+                    layers[layer].challenges[thing].layer = layer
+                    if (layers[layer].challenges[thing].unlocked === undefined)
+                        layers[layer].challenges[thing].unlocked = true
+                    if (layers[layer].challenges[thing].completionLimit === undefined)
+                        layers[layer].challenges[thing].completionLimit = 1
 
                 }
             }
@@ -70,8 +70,8 @@ function updateLayers(){
                 if (!isNaN(thing)){
                     layers[layer].buyables[thing].id = thing
                     layers[layer].buyables[thing].layer = layer
-                    if (layers[layer].buyables[thing].unl === undefined)
-                        layers[layer].buyables[thing].unl = true
+                    if (layers[layer].buyables[thing].unlocked === undefined)
+                        layers[layer].buyables[thing].unlocked = true
                 }
             }  
         }
@@ -82,9 +82,20 @@ function updateLayers(){
                 if (!isNaN(thing)){
                     layers[layer].clickables[thing].id = thing
                     layers[layer].clickables[thing].layer = layer
-                    if (layers[layer].clickables[thing].unl === undefined)
-                        layers[layer].clickables[thing].unl = true
+                    if (layers[layer].clickables[thing].unlocked === undefined)
+                        layers[layer].clickables[thing].unlocked = true
                 }
+            }  
+        }
+
+        if (layers[layer].bars){
+            layers[layer].bars.layer = layer
+            for (thing in layers[layer].bars){
+                layers[layer].bars[thing].id = thing
+                layers[layer].bars[thing].layer = layer
+                if (layers[layer].bars[thing].unlocked === undefined)
+                    layers[layer].bars[thing].unlocked = true
+                
             }  
         }
 
@@ -122,13 +133,14 @@ function readData(data, args=null){
 
 function someLayerUnlocked(row){
     for (layer in ROW_LAYERS[row])
-        if (player[layer].unl)
+        if (player[layer].unlocked)
             return true
     return false
 }
 
+
 // This isn't worth making a .ts file over
-const UP = 1
-const DOWN = 2
-const LEFT = 3
-const RIGHT = 4
+const UP = 0
+const DOWN = 1
+const LEFT = 2
+const RIGHT = 3
