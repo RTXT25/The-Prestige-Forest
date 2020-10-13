@@ -29,6 +29,16 @@ addLayer("a",{
             requirementDesc: "1 Atom",
             effectDesc: "Unlock a new row of Particle Upgrades and raise particle gain by 1.5",
             done: function() {return player.a.best.gte(1)}
+        },
+        0: {
+            requirementDesc: "2 Atoms",
+            effectDesc: "Unlock a new row of Particle Upgrades and unlock atom upgrades",
+            done: function() {return player.a.best.gte(2)}
         }
     },
+    tabFormat: {
+        "Main": {
+            
+        }
+    }
 })
