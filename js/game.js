@@ -307,6 +307,11 @@ function gameLoop(diff) {
 		player.p.amtsacrificed = player.p.amtsacrificed.add(player.p.points.div(20).times(diff))
 	}
 
+	if (player.p.compressor) {
+		player.points = player.points.sub(player.points.div(2).times(diff))
+		player.p.amtcompressed = player.p.amtcompressed.add(player.p.points.div(2).times(diff))
+	}
+
 	for (layer in layers){
 		if (layers[layer].automate) layers[layer].automate();
 	}
