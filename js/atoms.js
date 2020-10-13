@@ -33,7 +33,8 @@ addLayer("a",{
         1: {
             requirementDescription: "2 Atoms",
             effectDescription: "Unlock a new row of Particle Upgrades and unlock atom upgrades",
-            done: function() {return false /*player.a.best.gte(2)*/}
+            done: function() {return false /*player.a.best.gte(2)*/},
+            unlocked: function() {return false}
         }
     },
     tabFormat: {
