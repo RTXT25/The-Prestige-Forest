@@ -35,6 +35,16 @@ addLayer("a",{
             requirementDescription: "2 Atoms",
             effectDescription: "Unlock a new row of Particle Upgrades and unlock atom upgrades",
             done: function() {return player.a.best.gte(2)},
+        },
+        2: {
+            requirementDescription: "3 Atoms",
+            effectDescription: "Keep particle upgrades on row 1 and 2 on reset",
+            done: function() {return player.a.best.gte(3)},
+        },
+        3: {
+            requirementDescription: "4 Atoms",
+            effectDescription: "Keep particle upgrades on row 3 on reset",
+            done: function() {return player.a.best.gte(4)},
         }
     },
     tabFormat: {
