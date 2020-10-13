@@ -34,17 +34,38 @@ addLayer("a",{
         1: {
             requirementDescription: "2 Atoms",
             effectDescription: "Unlock a new row of Particle Upgrades and unlock atom upgrades",
-            done: function() {return false /*player.a.best.gte(2)*/},
-            unlocked: function() {return false}
+            done: function() {return player.a.best.gte(2)},
         }
     },
     tabFormat: {
         "Main": {
             content: ["main-display",["prestige-button",function() {return "Compress your energy into "}], "milestones"]
         },
-        "Not Main": {
-            unlocked: function() {return false},
-            content: ["milestones"]
+        "Upgrades": {
+            unlocked:function() {return hasMilestone("a", 1)},
+            content: ["upgrades"]
+        }
+    },
+    upgrades: {
+        rows: 1,
+        cols: 2,
+        11: {
+            cost: new Decimal(2),
+            title: "The atomizer",
+            description: "Boosts particle gain based on atoms",
+            effect: function() {
+                return player.a.points.add(2).pow(1.5)
+            },
+            unlocked:function() {return hasMilestone("a", 1)}
+        },
+        12: {
+            cost: new Decimal(4),
+            title: "The Energiser",
+            description: "Boosts energy gain based on atoms",
+            effect: function() {
+                return player.a.points.add(2).pow(1.5)
+            },
+            unlocked:function() {return (hasMilestone("a", 1)&&(hasUpgrade("a",11)))}
         }
     },
     hotkeys: [

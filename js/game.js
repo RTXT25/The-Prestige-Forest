@@ -35,6 +35,7 @@ function getPointGen() {
 	if(hasUpgrade("p",12)) gain = gain.times(upgradeEffect("p", 12))
 	if(hasUpgrade("p",13)) gain = gain.times(upgradeEffect("p", 13))
 	if(hasUpgrade("p",15)) gain = gain.times(upgradeEffect("p",15))
+	if(hasUpgrade("a",12)) gain = gain.times(upgradeEffect("a",12))
 	return gain
 }
 
@@ -305,12 +306,12 @@ function gameLoop(diff) {
 	}
 
 	if (player.p.reactor) {
-		player.p.points = player.p.points.sub(player.p.points.div(20).times(diff))
+		if (!hasUpgrade("p", 35)) player.p.points = player.p.points.sub(player.p.points.div(20).times(diff))
 		player.p.amtsacrificed = player.p.amtsacrificed.add(player.p.points.div(20).times(diff))
 	}
 
 	if (player.p.compressor) {
-		player.points = player.points.sub(player.points.div(2).times(diff))
+		if (!hasUpgrade("p", 35)) player.points = player.points.sub(player.points.div(2).times(diff))
 		player.p.amtcompressed = player.p.amtcompressed.add(player.p.points.div(2).times(diff))
 	}
 
