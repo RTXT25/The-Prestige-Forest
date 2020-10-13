@@ -4,6 +4,7 @@ addLayer("a",{
         points: new Decimal(0),
         best: 0
     }},
+    resetDescription: "Compress energy for ",
     resource: "atoms",
     color:() => "#17E6F0",
     row: 1,
