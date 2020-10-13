@@ -156,7 +156,7 @@ addLayer("p", {
             title: "The Compresser",
             desc: "Compresses Your Particles",
             cost: new Decimal("1e24"),
-            effect: function () {return player.p.amtcompressed.log(2)},
+            effect: function () {return player.p.amtcompressed.add(1).log(2)},
             unl:function() {return ((player.a.best.gte(1))&&(hasUpg("p",24)))}
         }
     },
