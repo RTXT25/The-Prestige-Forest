@@ -16,7 +16,7 @@ addLayer("p", {
         }
     },
     startData() { return {
-        unl: true,
+        unlocked: true,
         points: new Decimal(0),
         reactor: false,
         amtsacrificed: new Decimal(0),
@@ -161,6 +161,7 @@ addLayer("p", {
         }
     },
     hotkeys: [
-        {key: "p", description: "P: Reset for particles", onPress(){if (player[this.layer].unl) doReset(this.layer)}}
-    ]
+        {key: "p", description: "P: Reset for particles", onPress(){if (player[this.layer].unlocked) doReset(this.layer)}}
+    ],
+    branches: ["a"]
 })

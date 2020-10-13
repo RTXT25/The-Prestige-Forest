@@ -1,6 +1,6 @@
 addLayer("a",{
     startData() { return {
-        unl: function(){hasUpgrade("p",15)},
+        unlocked: function(){return (hasUpgrade("p", 15)||(player.a.best.gte(1)))},
         points: new Decimal(0),
         best: 0
     }},
@@ -45,5 +45,8 @@ addLayer("a",{
             unlocked: function() {return false},
             content: ["milestones"]
         }
-    }
+    },
+    hotkeys: [
+        {key: "a", description: "A: Reset for atoms", onPress(){if (player[this.layer].unlocked()) doReset(this.layer)}}
+    ],
 })
