@@ -9,7 +9,7 @@ addLayer("p", {
         },
         1: {
             title: "The Compressor",
-            effectDescription: "Allows you to activate the compressor, losing 50% of your energy per second but you gain a boost to particles based on total particles lost",
+            effectDescription: "Allows you to activate the compressor, losing 50% of your energy per second but you gain a boost to particles based on total energy lost",
             done: function() {return hasUpgrade("p", 25)},
             unlocked: function() {return hasUpgrade("p", 25)},
             toggles: [["p", "compressor"]],
