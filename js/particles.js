@@ -4,14 +4,14 @@ addLayer("p", {
             title: "The Reactor",
             effectDescription: "Allows you to activate the reactor, losing 5% of your particles per second but you gain a boost based on total particles lost",
             done: function() {return hasUpgrade("p", 15)},
-            unl: function() {return hasUpgrade("p", 15)},
+            unlocked: function() {return hasUpgrade("p", 15)},
             toggles: [["p", "reactor"]],
         },
         1: {
             title: "The Compressor",
             effectDescription: "Allows you to activate the compressor, losing 50% of your energy per second but you gain a boost to particles based on total particles lost",
             done: function() {return hasUpgrade("p", 25)},
-            unl: function() {return hasUpgrade("p", 25)},
+            unlocked: function() {return hasUpgrade("p", 25)},
             toggles: [["p", "compressor"]],
         }
     },
@@ -64,7 +64,7 @@ addLayer("p", {
             effect: function() {
                 return (player.p.points.add(2).pow(0.5))
             },
-            unl:function() {return hasUpgrade("p",11)}
+            unlocked:function() {return hasUpgrade("p",11)}
         },
         13: {
             title: "Gravity",
@@ -91,7 +91,7 @@ addLayer("p", {
                 if (value.lessThan(2)) return 2
                 return value
             },
-            unl:function() {return hasUpgrade("p",12)}
+            unlocked:function() {return hasUpgrade("p",12)}
         },
         14: {
             title: "The Gravitator",
@@ -112,7 +112,7 @@ addLayer("p", {
                 if (value.lessThan(1)) return 1
                 return value
             },
-            unl:function() {return hasUpgrade("p",13)}
+            unlocked:function() {return hasUpgrade("p",13)}
         },
         15: {
             title: "Fission Reactor",
@@ -126,38 +126,38 @@ addLayer("p", {
                 if (hasUpgrade("p",21)) {return player.p.amtsacrificed.log(1.01).times(10)}
                 return player.p.amtsacrificed.log(1.05).times(10)
             },
-            unl:function() {return hasUpgrade("p",14)}
+            unlocked:function() {return hasUpgrade("p",14)}
         },
         21: {
             title: "Powerfull Fission",
             description: "The formula For the reactor effect is improved",
             cost: new Decimal("1e12"),
-            unl:function() {return ((player.a.best.gte(1))&&(hasUpgrade("p",15)))}
+            unlocked:function() {return ((player.a.best.gte(1))&&(hasUpgrade("p",15)))}
         },
         22: {
             title: "Make Gravity Stronger",
             description: "The gravity formula is improved",
             cost: new Decimal("1e13"),
-            unl:function() {return ((player.a.best.gte(1))&&(hasUpgrade("p",21)))}
+            unlocked:function() {return ((player.a.best.gte(1))&&(hasUpgrade("p",21)))}
         },
         23: {
             title: "Add Dark Energy The Gravitator Walls",
             description: "The gravitator formula is improved",
             cost: new Decimal("1e18"),
-            unl:function() {return ((player.a.best.gte(1))&&(hasUpgrade("p",22)))}
+            unlocked:function() {return ((player.a.best.gte(1))&&(hasUpgrade("p",22)))}
         },
         24: {
             title: "The Improver",
             description: "Make this rows upgrades better",
             cost: new Decimal("1e21"),
-            unl:function() {return ((player.a.best.gte(1))&&(hasUpgrade("p",23)))}
+            unlocked:function() {return ((player.a.best.gte(1))&&(hasUpgrade("p",23)))}
         },
         25: {
             title: "The Compresser",
             description: "Compresses Your Particles",
             cost: new Decimal("1e24"),
             effect: function () {return player.p.amtcompressed.add(1).log(2)},
-            unl:function() {return ((player.a.best.gte(1))&&(hasUpgrade("p",24)))}
+            unlocked:function() {return ((player.a.best.gte(1))&&(hasUpgrade("p",24)))}
         }
     },
     hotkeys: [
