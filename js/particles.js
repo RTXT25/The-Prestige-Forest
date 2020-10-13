@@ -15,6 +15,7 @@ addLayer("p", {
             toggles: [["p", "compressor"]],
         }
     },
+    resetDescription: "Change the energies form for ",
     startData() { return {
         unlocked: true,
         points: new Decimal(0),
