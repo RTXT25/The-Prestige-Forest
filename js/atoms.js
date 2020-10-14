@@ -48,7 +48,7 @@ addLayer("a",{
         },
         4: {
             requirementDescription: "10 Atoms",
-            effectDescription: "Gain 100% of particle every second and unlock an atom upgrade",
+            effectDescription: "Gain 100% of particle gain every second and unlock an atom upgrade",
             done: function() {return player.a.best.gte(10)},
         },
     },
