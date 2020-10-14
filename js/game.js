@@ -318,6 +318,10 @@ function gameLoop(diff) {
 		player.p.amtcompressed = player.p.amtcompressed.add(player.p.points.div(2).times(diff))
 	}
 
+	if (hasMilestone("a", 4)) {
+		player.p.points = player.p.points.add(getResetGain("p").times(diff))
+	}
+
 	for (layer in layers){
 		if (layers[layer].automate) layers[layer].automate();
 	}

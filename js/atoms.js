@@ -41,6 +41,16 @@ addLayer("a",{
             effectDescription: "Keep particle upgrades on reset",
             done: function() {return player.a.best.gte(3)},
         },
+        3: {
+            requirementDescription: "5 Atoms",
+            effectDescription: "Unlock the next atom upgrade and the atom buff",
+            done: function() {return player.a.best.gte(5)},
+        },
+        4: {
+            requirementDescription: "10 Atoms",
+            effectDescription: "Gain 100% of particle every second",
+            done: function() {return player.a.best.gte(10)},
+        },
     },
     tabFormat: {
         "Main": {
@@ -53,7 +63,7 @@ addLayer("a",{
     },
     upgrades: {
         rows: 1,
-        cols: 2,
+        cols: 4,
         11: {
             cost: new Decimal(2),
             title: "The atomizer",
@@ -71,9 +81,32 @@ addLayer("a",{
                 return player.a.points.add(2).pow(1.5)
             },
             unlocked:function() {return (hasMilestone("a", 1)&&(hasUpgrade("a",11)))}
+        },
+        13: {
+            cost: new Decimal(6),
+            title: "More Mass = MUCH More Gravity",
+            description: "Atoms now boost gravity",
+            effect: function() {
+                return player.a.points.add(1).pow(.31)
+            },
+            unlocked:function() {return (hasMilestone("a", 3)&&(hasUpgrade("a",12)))}
+        },
+        14: {
+            cost: new Decimal(10),
+            title: "The Gravitator Is At 110% Efficiency",
+            description: "The Gravitator is now stronger than gravity",
+            unlocked:function() {return (hasMilestone("a", 4)&&(hasUpgrade("a",13)))}
         }
     },
+
     hotkeys: [
         {key: "a", description: "A: Reset for atoms", onPress(){if (player[this.layer].unlocked()) doReset(this.layer)}}
     ],
+    effect: function() {
+        if (hasMilestone("a",3)) return player.a.points.add(1).pow(0.30)
+        else return 1
+    },
+    effectDescription: function() {
+        if (hasMilestone("a",3)) return ("raising the reactor and compressor buff by " + this.effect().toString())
+    }
 })

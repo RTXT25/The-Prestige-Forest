@@ -78,6 +78,7 @@ addLayer("p", {
                     if (player.points.lessThan(1)) return 1
                     let logamt = new Decimal("1000").div(player.points.pow(1.25)).add(1.0001)
                     let value = player.points.log(logamt).add(2).pow(1.5)
+                    if (hasUpgrade("a",13)) value = value.pow(upgradeEffect("a",13))
                     if (value.lessThan(2)) return 2
                     return value
                 }
@@ -85,6 +86,7 @@ addLayer("p", {
                     if (player.points.lessThan(1)) return 1
                     let logamt = new Decimal("1000").div(player.points.pow(1.05)).add(1.001)
                     let value = player.points.log(logamt).add(2).pow(1.15)
+                    if (hasUpgrade("a",13)) value = value.pow(upgradeEffect("a",13))
                     if (value.lessThan(2)) return 2
                     return value
                 }
@@ -92,12 +94,14 @@ addLayer("p", {
                     if (player.points.lessThan(1)) return 1
                     let logamt = new Decimal("1000").div(player.points.pow(1.01)).add(1.001)
                     let value = player.points.log(logamt).add(2).pow(1.05)
+                    if (hasUpgrade("a",13)) value = value.pow(upgradeEffect("a",13))
                     if (value.lessThan(2)) return 2
                     return value
                 }
                 if (player.points.lessThan(1)) return 1
                 let logamt = new Decimal("1000").div(player.points.root(1.01)).add(1.05)
                 let value = player.points.log(logamt).add(2)
+                if (hasUpgrade("a",13)) value = value.pow(upgradeEffect("a",13))
                 if (value.lessThan(2)) return 2
                 return value
             },
@@ -108,6 +112,11 @@ addLayer("p", {
             description: "Uses gravity to create more particles",
             cost: new Decimal(25),
             effect: function() {
+                if (hasUpgrade("a",14)) {
+                    let value = new Decimal(upgradeEffect("p", 13)).pow(1.10)
+                    if (value.lessThan(1)) return 1
+                    return value
+                }
                 if (hasUpgrade("p",33)) {
                     let value = new Decimal(upgradeEffect("p", 13)).pow((.90))
                     if (value.lessThan(1)) return 1
@@ -135,11 +144,11 @@ addLayer("p", {
             cost: new Decimal(250),
             effect: function() {
                 if (player.p.amtsacrificed.lessThan(1)) {return 1}
-                if (hasUpgrade("p",31)) return player.p.amtsacrificed.log(1.001).times(10)
+                if (hasUpgrade("p",31)) return player.p.amtsacrificed.log(1.001).times(10).pow(layers.a.effect())
                 if (hasUpgrade("p",24)) {
-                    return player.p.amtsacrificed.log(1.005).times(10)
+                    return player.p.amtsacrificed.log(1.005).times(10).pow(layers.a.effect())
                 }
-                if (hasUpgrade("p",21)) {return player.p.amtsacrificed.log(1.01).times(10)}
+                if (hasUpgrade("p",21)) return player.p.amtsacrificed.log(1.01).times(10).pow(layers.a.effect())
                 return player.p.amtsacrificed.log(1.05).times(10)
             },
             unlocked:function() {return hasUpgrade("p",14)}
@@ -173,8 +182,8 @@ addLayer("p", {
             description: "Compresses Your Particles",
             cost: new Decimal("1e24"),
             effect: function () {
-                if (hasUpgrade("p",31)) return player.p.amtcompressed.add(1).log(1.8).add(2)
-                return player.p.amtcompressed.add(1).log(2).add(2)
+                if (hasUpgrade("p",31)) return player.p.amtcompressed.add(1).log(1.8).add(2).pow(layers.a.effect())
+                return player.p.amtcompressed.add(1).log(2).add(2).pow(layers.a.effect())
             },
             unlocked:function() {return ((player.a.best.gte(1))&&(hasUpgrade("p",24)))}
         },
@@ -216,7 +225,7 @@ addLayer("p", {
     doReset(resettingLayer) {
         if (resettingLayer == "a") {
             if (hasMilestone("a", 2)) {
-                layerDataReset("p", ["upgrades"])
+                layerDataReset("p", ["upgrades","reactor","compressor"])
             }
             else {
                 layerDataReset("p")
