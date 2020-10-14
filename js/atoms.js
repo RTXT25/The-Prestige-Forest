@@ -38,14 +38,9 @@ addLayer("a",{
         },
         2: {
             requirementDescription: "3 Atoms",
-            effectDescription: "Keep particle upgrades on rows 1 and 2 on reset",
+            effectDescription: "Keep particle upgrades on reset",
             done: function() {return player.a.best.gte(3)},
         },
-        3: {
-            requirementDescription: "4 Atoms",
-            effectDescription: "Keep particle upgrades on row 3 on reset",
-            done: function() {return player.a.best.gte(4)},
-        }
     },
     tabFormat: {
         "Main": {
