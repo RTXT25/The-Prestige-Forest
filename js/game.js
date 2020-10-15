@@ -17,9 +17,9 @@ let modInfo = {
 // Set your version in num and name, but leave the tmt values so people know what version it is
 let VERSION = {
 	num: "2.0",
-	name: "Finally making some progress!",
+	name: "Pinnacle of Achievement Mountain",
 	tmtNum: "2.0",
-	tmtName: "Finally making some progress!"
+	tmtName: "Pinnacle of Achievement Mountain"
 }
 
 // Determines if it should show points/sec
@@ -45,7 +45,8 @@ function getPointGen() {
 function getResetGain(layer, useType = null) {
 	let type = useType
 	if (!useType) type = layers[layer].type
-
+	if(tmp[layer].type == "none")
+		return new Decimal (0)
 	if (tmp[layer].gainExp.eq(0)) return new Decimal(0)
 	if (type=="static") {
 		if ((!layers[layer].canBuyMax()) || tmp[layer].baseAmount.lt(tmp[layer].requires)) return new Decimal(1)
@@ -66,6 +67,8 @@ function getResetGain(layer, useType = null) {
 function getNextAt(layer, canMax=false, useType = null) {
 	let type = useType
 	if (!useType) type = layers[layer].type
+	if(tmp[layer].type == "none")
+		return new Decimal (Infinity)
 
 	if (tmp[layer].gainMult.lte(0)) return new Decimal(Infinity)
 	if (tmp[layer].gainExp.lte(0)) return new Decimal(Infinity)
@@ -113,6 +116,8 @@ function canReset(layer)
 		return tmp[layer].baseAmount.gte(tmp[layer].requires)
 	else if(tmp[layer].type== "static")
 		return tmp[layer].baseAmount.gte(tmp[layer].nextAt) 
+	if(tmp[layer].type == "none")
+		return false
 	else
 		return layers[layer].canReset()
 }
@@ -120,11 +125,11 @@ function canReset(layer)
 function rowReset(row, layer) {
 	for (lr in ROW_LAYERS[row]){
 		if(layers[lr].doReset) {
-			player[lr].active = null // Exit challenges on any row reset on an equal or higher row
+			player[lr].activeChallenge = null // Exit challenges on any row reset on an equal or higher row
 			layers[lr].doReset(layer)
 		}
 		else
-			if(layers[layer].row > layers[lr].row) layerDataReset(lr)
+			if(layers[layer].row > layers[lr].row && row !== "side") layerDataReset(lr)
 	}
 }
 
@@ -185,15 +190,16 @@ function doReset(layer, force=false) {
 		
 		addPoints(layer, gain)
 		updateMilestones(layer)
+		updateAchievements(layer)
 
 		if (!player[layer].unlocked) {
 			player[layer].unlocked = true;
 			needCanvasUpdate = true;
 
-			if (layers[layer].incr_order){
-				lrs = layers[layer].incr_order
+			if (layers[layer].increaseUnlockOrder){
+				lrs = layers[layer].increaseUnlockOrder
 				for (lr in lrs)
-					if (!player[lrs[lr]].unlocked) player[lrs[lr]].order++
+					if (!player[lrs[lr]].unlocked) player[lrs[lr]].unlockOrder++
 			}
 		}
 	
@@ -211,6 +217,7 @@ function doReset(layer, force=false) {
 	player.points = (row == 0 ? new Decimal(0) : new Decimal(10))
 
 	for (let x = row; x >= 0; x--) rowReset(x, layer)
+	rowReset("side", layer)
 	prevOnReset = undefined
 
 	updateTemp()
@@ -226,7 +233,7 @@ function resetRow(row) {
 	doReset(pre_layers[0], true)
 	for (let layer in layers) {
 		player[layers[layer]].unlocked = false
-		if (player[layers[layer]].order) player[layers[layer]].order = 0
+		if (player[layers[layer]].unlockOrder) player[layers[layer]].unlockOrder = 0
 	}
 	player.points = new Decimal(10)
 	updateTemp();
@@ -236,21 +243,21 @@ function resetRow(row) {
 function startChallenge(layer, x) {
 	let enter = false
 	if (!player[layer].unlocked) return
-	if (player[layer].active == x) {
+	if (player[layer].activeChallenge == x) {
 		completeChallenge(layer, x)
-		delete player[layer].active
+		delete player[layer].activeChallenge
 	} else {
 		enter = true
 	}	
 	doReset(layer, true)
-	if(enter) player[layer].active = x
+	if(enter) player[layer].activeChallenge = x
 
 	updateChallengeTemp(layer)
 }
 
 function canCompleteChallenge(layer, x)
 {
-	if (x != player[layer].active) return
+	if (x != player[layer].activeChallenge) return
 
 	let challenge = layers[layer].challenges[x]
 
@@ -271,10 +278,10 @@ function canCompleteChallenge(layer, x)
 }
 
 function completeChallenge(layer, x) {
-	var x = player[layer].active
+	var x = player[layer].activeChallenge
 	if (!x) return
 	if (! canCompleteChallenge(layer, x)){
-		delete player[layer].active
+		delete player[layer].activeChallenge
 		return
 	}
 	if (player[layer].challenges[x] < tmp[layer].challenges[x].completionLimit) {
@@ -282,7 +289,7 @@ function completeChallenge(layer, x) {
 		player[layer].challenges[x] += 1
 		if (layers[layer].challenges[x].onComplete) layers[layer].challenges[x].onComplete()
 	}
-	delete player[layer].active
+	delete player[layer].activeChallenge
 	updateChallengeTemp(layer)
 }
 
@@ -328,6 +335,7 @@ function gameLoop(diff) {
 
 	for (layer in layers){
 		if (layers[layer].milestones) updateMilestones(layer);
+		if (layers[layer].achievements) updateAchievements(layer)
 	}
 
 	if (player.hasNaN&&!NaNalert) {

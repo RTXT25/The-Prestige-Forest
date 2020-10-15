@@ -34,7 +34,7 @@ function format(decimal, precision=2) {
 		var slog = decimal.slog()
 		if (slog.gte(1e6)) return "F" + format(slog.floor())
 		else return Decimal.pow(10, slog.sub(slog.floor())).toStringWithDecimalPlaces(3) + "F" + commaFormat(slog.floor(), 0)
-	} else if (decimal.gte("1e1000")) return (Math.floor(decimal.mantissa + 0.01) + ("e"+formatWhole(decimal.log10())))
+	} else if (decimal.gte("1e1000")) return (Math.floor(decimal.mantissa + 0.01) + ("e"+formatWhole(decimal.log10().floor())))
 	else if (decimal.gte(1e9)) return exponentialFormat(decimal, precision)
 	else if (decimal.gte(1e3)) return commaFormat(decimal, 0)
 	else return commaFormat(decimal, precision)
@@ -93,6 +93,7 @@ function getStartPlayer() {
 		playerdata[layer].spentOnBuyables = new Decimal(0)
 		playerdata[layer].upgrades = []
 		playerdata[layer].milestones = []
+		playerdata[layer].achievements = []
 		playerdata[layer].challenges = getStartChallenges(layer)
 		if (layers[layer].tabFormat && !Array.isArray(layers[layer].tabFormat)) {
 			playerdata.subtabs[layer] = {}
@@ -368,6 +369,10 @@ function hasMilestone(layer, id){
 	return (player[layer].milestones.includes(toNumber(id)) || player[layer].milestones.includes(id.toString()))
 }
 
+function hasAchievement(layer, id){
+	return (player[layer].achievements.includes(toNumber(id)) || player[layer].achievements.includes(id.toString()))
+}
+
 function hasChallenge(layer, id){
 	return (player[layer].challenges[id])
 }
@@ -404,6 +409,9 @@ function buyableEffect(layer, id){
 	return (tmp[layer].buyables[id].effect)
 }
 
+function achievementEffect(layer, id){
+	return (tmp[layer].achievements[id].effect)
+}
 
 function canAffordPurchase(layer, thing, cost) {
 	if (thing.currencyInternalName){
@@ -479,7 +487,7 @@ function clickClickable(layer, id) {
 
 // Function to determine if the player is in a challenge
 function inChallenge(layer, id){
-	let challenge = player[layer].active
+	let challenge = player[layer].activeChallenge
 	if (challenge==toNumber(id)) return true
 
 	if (layers[layer].challenges[challenge].countsAs)
@@ -540,6 +548,15 @@ function updateMilestones(layer){
 	}
 }
 
+function updateAchievements(layer){
+	for (id in layers[layer].achievements){
+		if (!isNaN(id) && !(player[layer].achievements.includes(id)) && layers[layer].achievements[id].done()) {
+			player[layer].achievements.push(id)
+			if (layers[layer].achievements[id].onComplete) layers[layer].achievements[id].onComplete()
+		}
+	}
+}
+
 function addTime(diff, layer) {
 	let data = player
 	let time = data.timePlayed
@@ -591,6 +608,8 @@ function prestigeButtonText(layer)
 	else if(tmp[layer].type== "static")
 		return `${tmp[layer].resetDescription !== undefined ? tmp[layer].resetDescription : "Reset for "}+<b>${formatWhole(tmp[layer].resetGain)}</b> ${tmp[layer].resource}<br><br>${player[layer].points.lt(20) ? (tmp[layer].baseAmount.gte(tmp[layer].nextAt)&&(tmp[layer].canBuyMax !== undefined) && tmp[layer].canBuyMax?"Next":"Req") : ""}: ${formatWhole(tmp[layer].baseAmount)} / ${(tmp[layer].roundUpCost ? formatWhole(tmp[layer].nextAtDisp) : format(tmp[layer].nextAtDisp))} ${ tmp[layer].baseResource }		
 		`
+	else if(tmp[layer].type == "none")
+		return ""
 	else
 		return layers[layer].prestigeButtonText()
 }

@@ -103,9 +103,9 @@ function loadVue() {
 	Vue.component('challenge', {
 		props: ['layer', 'data'],
 		template: `
-		<div v-if="layers[layer].challenges && layers[layer].challenges[data]!== undefined && tmp[layer].challenges[data].unlocked && !(player.hideChallenges && hasChallenge(layer, [data]))" v-bind:class="{hChallenge: true, done: hasChallenge(layer, data), canComplete: player[layer].active == data&&!hasChallenge(layer, data)&&canCompleteChallenge(layer, data)}">
+		<div v-if="layers[layer].challenges && layers[layer].challenges[data]!== undefined && tmp[layer].challenges[data].unlocked && !(player.hideChallenges && hasChallenge(layer, [data]))" v-bind:class="{hChallenge: true, done: hasChallenge(layer, data), canComplete: player[layer].activeChallenge == data&&!hasChallenge(layer, data)&&canCompleteChallenge(layer, data)}">
 			<br><h3 v-html="tmp[layer].challenges[data].name"></h3><br><br>
-			<button v-bind:class="{ longUpg: true, can: true, [layer]: true }" v-bind:style="{'background-color': tmp[layer].color}" v-on:click="startChallenge(layer, data)">{{player[layer].active==(data)?(canCompleteChallenge(layer, data)?"Finish":"Exit Early"):(hasChallenge(layer, data)?"Completed":"Start")}}</button><br><br>
+			<button v-bind:class="{ longUpg: true, can: true, [layer]: true }" v-bind:style="{'background-color': tmp[layer].color}" v-on:click="startChallenge(layer, data)">{{player[layer].activeChallenge==(data)?(canCompleteChallenge(layer, data)?"Finish":"Exit Early"):(hasChallenge(layer, data)?"Completed":"Start")}}</button><br><br>
 			<span v-html="tmp[layer].challenges[data].challengeDescription"></span><br>
 			Goal: {{format(tmp[layer].challenges[data].goal)}} {{tmp[layer].challenges[data].currencyDisplayName ? tmp[layer].challenges[data].currencyDisplayName : "points"}}<br>
 			Reward: <span v-html="tmp[layer].challenges[data].rewardDescription"></span><br>
@@ -178,7 +178,7 @@ function loadVue() {
 	Vue.component('prestige-button', {
 		props: ['layer', 'data'],
 		template: `
-		<button v-bind:class="{ [layer]: true, reset: true, locked: !tmp[layer].canReset, can: tmp[layer].canReset}"
+		<button v-if="(tmp[layer].type !== 'none')" v-bind:class="{ [layer]: true, reset: true, locked: !tmp[layer].canReset, can: tmp[layer].canReset}"
 			v-bind:style="[tmp[layer].canReset ? {'background-color': tmp[layer].color} : {}, tmp[layer].componentStyles['prestige-button']]"
 			v-html="tmp[layer].prestigeButtonText" v-on:click="doReset(layer)">
 		</button>
@@ -291,6 +291,36 @@ function loadVue() {
 	})
 
 
+	Vue.component('achievements', {
+		props: ['layer'],
+		template: `
+		<div v-if="layers[layer].achievements" class="upgTable">
+			<div v-for="row in layers[layer].achievements.rows" class="upgRow">
+				<div v-for="col in layers[layer].achievements.cols"><div v-if="layers[layer].achievements[row*10+col]!== undefined && tmp[layer].achievements[row*10+col].unlocked" class="upgAlign">
+					<achievement :layer = "layer" :data = "row*10+col" v-bind:style="tmp[layer].componentStyles.achievement"></achievement>
+				</div></div>
+			</div>
+			<br>
+		</div>
+		`
+	})
+
+	// data = id
+	Vue.component('achievement', {
+		props: ['layer', 'data'],
+		template: `
+		<div v-if="layers[layer].achievements && layers[layer].achievements[data]!== undefined && tmp[layer].achievements[data].unlocked" v-bind:class="{ [layer]: true, achievement: true, locked: !hasAchievement(layer, data), bought: hasAchievement(layer, data)}"
+			v-bind:tooltip="
+				hasAchievement(layer, data) ? (tmp[layer].achievements[data].doneTooltip ? tmp[layer].achievements[data].doneTooltip : 'You did it!')
+				: (tmp[layer].achievements[data].goalTooltip ? tmp[layer].achievements[data].goalTooltip : 'LOCKED')
+			"
+
+			v-bind:style="[(!tmp[layer].achievements[data].unlocked) ? {'visibility': 'hidden'} : {}, tmp[layer].achievements[data].style,]">
+			<span v-if= "tmp[layer].achievements[data].name"><br><h3 v-html="tmp[layer].achievements[data].name"></h3><br></span>
+		</div>
+		`
+	})
+
 
 	// NOT FOR USE IN STANDARD TAB FORMATTING
 	Vue.component('tab-buttons', {
@@ -305,7 +335,7 @@ function loadVue() {
 	})
 
 	Vue.component('layer-node', {
-		props: ['layer', 'abb'],
+		props: ['layer', 'abb', 'size'],
 		template: `
 		<button v-if="nodeShown(layer)"
 			v-bind:id="layer"
@@ -317,7 +347,8 @@ function loadVue() {
 				: (tmp[layer].tooltipLocked ? tmp[layer].tooltipLocked : 'Reach ' + formatWhole(tmp[layer].requires) + ' ' + tmp[layer].baseResource + ' to unlock (You have ' + formatWhole(tmp[layer].baseAmount) + ' ' + tmp[layer].baseResource + ')')
 			"
 			v-bind:class="{
-				treeNode: true,
+				treeNode: size != 'small',
+				smallNode: size == 'small',
 				[layer]: true,
 				hidden: !tmp[layer].layerShown,
 				locked: !player[layer].unlocked && !tmp[layer].baseAmount.gte(tmp[layer].requires),

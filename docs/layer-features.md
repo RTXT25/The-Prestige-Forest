@@ -10,7 +10,7 @@ Key:
 - **sometimes required**: This is may be required, depending on other things in the layer.
 - **optional**: You can leave this out if you don't intend to use that feature for the layer.
 
-# Layer Definition features
+## Layer Definition features
 
 - layer: **Assigned automagically**. It's the same value as the name of this layer, so you can do player[this.layer].points or similar
       to access the save value. It makes copying code to new layers easier. It is also assigned to all upgrades and buyables and such.
@@ -26,11 +26,15 @@ Key:
         Optional:
             total: A Decimal, tracks total amount of main prestige currency
             best: A Decimal, tracks highest amount of main prestige currency
-            order: used to keep track of relevant layers unlocked before this one.
+            unlockOrder: used to keep track of relevant layers unlocked before this one.
 
 - color: A color associated with this layer, used in many places. (A string in hex format with a #)
 
-- row: The row of the layer, starting at 0.
+- row: The row of the layer, starting at 0. This affects where the node appears on the tree, and which resets affect the layer.
+
+       Using "side" instead of a number will cause the layer to appear off to the side as a smaller node (useful for achievements
+       and statistics). Side layers are not affected by resets unless you add a doReset to them.
+       
 
 - resource: Name of the main currency you gain by resetting on this layer.
 
@@ -62,7 +66,7 @@ Key:
               standard tab layout. (cannot do subtabs)
 
 
-# Big features (all optional)
+## Big features (all optional)
 
 - upgrades: A grid of one-time purchases which can have unique upgrade conditions, currency costs, and bonuses.
     [Explanations are in a separate file.](upgrades.md)
@@ -86,15 +90,11 @@ Key:
 - bars: Display some information as a progress bar, gague, or similar. They are highly customizable, and can be vertical as well.
     [Explanations are in a separate file.](bars.md)
 
-# Prestige formula features
+- achievements: Kind of like milestones, but with a different display style and some other differences. Extra features are on the way at a later date!
+    [Explanations are in a separate file.](achievements.md)
 
-- baseResource: The name of the resource that determines how much of the main currency you gain on reset.
 
-- baseAmount(): A function that gets the current value of the base resource.
-
-- requires: A Decimal, the amount of the base needed to gain 1 of the prestige currency.
-            Also the amount required to unlock the layer.
-            You can instead make this a function, to make it harder if another layer was unlocked first (based on "order").
+## Prestige formula features
 
 - type: Determines which prestige formula you use.
     "normal": The amount of currency you gain is independent of its current amount (like Prestige).
@@ -102,6 +102,15 @@ Key:
     "static": The cost is dependent on your total after reset. 
         formula before bonuses is based on `base^(x^exponent)`
     "custom": You can define everything, from the calculations to the text on the button, yourself. (See more at the bottom)
+    "none": This layer does not prestige, and therefore does not need any of the other features in this section.
+
+- baseResource: The name of the resource that determines how much of the main currency you gain on reset.
+
+- baseAmount(): A function that gets the current value of the base resource.
+
+- requires: A Decimal, the amount of the base needed to gain 1 of the prestige currency.
+            Also the amount required to unlock the layer.
+            You can instead make this a function, to make it harder if another layer was unlocked first (based on unlockOrder).
 
 - exponent: Used as described above.
 
@@ -125,7 +134,7 @@ Key:
 
 
 
-# Tree/node features
+## Tree/node features
 
 - symbol: **optional**, the text that appears on this layer's node. Default is the layer id with the first letter capitalized
 
@@ -133,7 +142,7 @@ Key:
             and layers are sorted in alphabetical order.
 
 - branches: **optional**, an array of layer ids. On a tree, a line will appear from this layer to all of the layers
-            in the list. Alternatively, an entry in the array can be a pair consisting of the layer id and a color
+            in the list. Alternatively, an entry in the array can be a 2-element array consisting of the layer id and a color
             value. The color value can either be a string with a hex color code, or a number from 1-3 (theme-affected colors)
 
 - nodeStyle: **optional**,  a CSS object, where the keys are CSS attributes, which styles this layer's node on the tree
@@ -142,10 +151,11 @@ Key:
                                is unlocked or locked, respectively. By default the tooltips behave the same as in the original Prestige Tree.
 
 
-# Other features
+## Other features
 
 - doReset(resettingLayer): **optional**, is triggered when a layer on a row greater than or equal to this one does a reset.
                 The default behavior is to reset everything on the row, but only if it was triggered by a layer in a higher row.
+                (doReset is always called for side layers, but for these the default behavior is to reset nothing.)
                 
                 If you want to keep things, determine what to keep based on the resettingLayer, milestones, and such, then call
                 resetLayerData(layer, keep), where layer is this layer, and keep is an array of the names of things to keep.
@@ -164,7 +174,7 @@ Key:
 
 - resetsNothing: **optional**, returns true if this layer shouldn't trigger any resets when you prestige.
 
-- incr_order: **optional**, an array of layer ids. When this layer is unlocked for the first time, the "order" value
+- increaseUnlockOrder: **optional**, an array of layer ids. When this layer is unlocked for the first time, the unlockOrder value
               for any not-yet-unlocked layers in this list increases. This can be used to make them harder to unlock.
 
 - should_notify: **optional**, a function to return true if this layer should be highlighted in the tree.
@@ -181,7 +191,7 @@ Key:
 ```
 
 
-# Custom Prestige type  
+## Custom Prestige type  
 
 - getResetGain(): **For custom prestige type**, Returns how many points you should get if you reset now. You can call
             getResetGain(this.layer, useType = "static") or similar to calculate what your gain would be under another

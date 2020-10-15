@@ -24,11 +24,13 @@ function updateHotkeys()
 
 var ROW_LAYERS = {}
 var TREE_LAYERS = {}
+var OTHER_LAYERS = {}
 
 function updateLayers(){
     LAYERS = Object.keys(layers);
     ROW_LAYERS = {}
     TREE_LAYERS = {}
+    OTHER_LAYERS = {}
     for (layer in layers){
         layers[layer].layer = layer
         if (layers[layer].upgrades){
@@ -48,6 +50,16 @@ function updateLayers(){
                     layers[layer].milestones[thing].layer = layer
                     if (layers[layer].milestones[thing].unlocked === undefined)
                         layers[layer].milestones[thing].unlocked = true
+                }
+            }
+        }
+        if (layers[layer].achievements){
+            for (thing in layers[layer].achievements){
+                if (!isNaN(thing)){
+                    layers[layer].achievements[thing].id = thing
+                    layers[layer].achievements[thing].layer = layer
+                    if (layers[layer].achievements[thing].unlocked === undefined)
+                        layers[layer].achievements[thing].unlocked = true
                 }
             }
         }
@@ -101,20 +113,26 @@ function updateLayers(){
 
         if(!layers[layer].componentStyles) layers[layer].componentStyles = {}
         if(layers[layer].symbol === undefined) layers[layer].symbol = layer.charAt(0).toUpperCase() + layer.slice(1)
+        if(layers[layer].unlockOrder === undefined) layers[layer].unlockOrder = 0
 
         row = layers[layer].row
         if(!ROW_LAYERS[row]) ROW_LAYERS[row] = {}
-        if(!TREE_LAYERS[row]) TREE_LAYERS[row] = []
+        if(!TREE_LAYERS[row] && !isNaN(row)) TREE_LAYERS[row] = []
+        if(!OTHER_LAYERS[row] && isNaN(row)) OTHER_LAYERS[row] = []
+
         ROW_LAYERS[row][layer]=layer;
         let position = (layers[layer].position !== undefined ? layers[layer].position : layer)
-        TREE_LAYERS[row].push({layer: layer, position: position})
-
         
+        if (!isNaN(row)) TREE_LAYERS[row].push({layer: layer, position: position})
+        else OTHER_LAYERS[row].push({layer: layer, position: position})
+        
+    }
+    for (row in OTHER_LAYERS) {
+        OTHER_LAYERS[row].sort((a, b) => (a.position > b.position) ? 1 : -1)
     }
     for (row in TREE_LAYERS) {
         TREE_LAYERS[row].sort((a, b) => (a.position > b.position) ? 1 : -1)
     }
-
     updateHotkeys()
 }
 
