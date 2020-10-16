@@ -54,7 +54,7 @@ addLayer("a",{
     },
     tabFormat: {
         "Main": {
-            content: ["main-display",["prestige-button",function() {return "Compress your energy into "}], "milestones"]
+            content: ["main-display",["prestige-button",function() {return "Compress your energy into "}],"best", "milestones"]
         },
         "Upgrades": {
             unlocked:function() {return hasMilestone("a", 1)},
@@ -108,5 +108,6 @@ addLayer("a",{
     },
     effectDescription: function() {
         if (hasMilestone("a",3)) return ("raising the reactor and compressor buff by " + this.effect().toString())
-    }
+    },
+    branches: ["c"],
 })
