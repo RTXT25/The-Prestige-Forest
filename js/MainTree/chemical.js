@@ -1,6 +1,6 @@
 addLayer("c", {
     name: "Chemicals",
-    resource: "Chemicals",
+    resource: "Chemical Synthesizers",
     row: 1,
     color:() => "#DC143C",
     baseResource: "atoms",

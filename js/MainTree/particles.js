@@ -1,13 +1,6 @@
 addLayer("p", {
     milestones: {
         0: {
-            title: "The Reactor",
-            effectDescription: "Allows you to activate the reactor, losing 5% of your particles per second but you gain a boost based on total particles lost",
-            done: function() {return hasUpgrade("p", 15)},
-            unlocked: function() {return hasUpgrade("p", 15)},
-            toggles: [["p", "reactor"]],
-        },
-        1: {
             title: "The Compressor",
             effectDescription: "Allows you to activate the compressor, losing 50% of your energy per second but you gain a boost to particles based on total energy lost",
             done: function() {return hasUpgrade("p", 25)},
@@ -15,14 +8,35 @@ addLayer("p", {
             toggles: [["p", "compressor"]],
         }
     },
-    resetDescription: "Change the energies form for ",
+    clickables: {
+        rows: 1,
+        cols: 1,
+        11: {
+            title: "The Reactor",
+            unlocked: function() {return hasUpgrade("p", 15)},
+            display: function() {return "Allows you to activate the reactor, losing 5% of your particles per second but you gain a boost based on total particles lost."},
+            effect: function() {
+                if (player.p.amtsacrificed.lessThan(1)) {return 1}
+                if (hasUpgrade("p",31)) return player.p.amtsacrificed.log(1.001).times(10).pow(layers.a.effect())
+                if (hasUpgrade("p",24)) {
+                    return player.p.amtsacrificed.log(1.005).times(10).pow(layers.a.effect())
+                }
+                if (hasUpgrade("p",21)) return player.p.amtsacrificed.log(1.01).times(10).pow(layers.a.effect())
+                return player.p.amtsacrificed.log(1.05).times(10)
+            },
+            onClick: function() {
+                if (typeof getClickableState("p", 11) == "undefined") {setClickableState("p", 11, true)}
+                setClickableState("p", 11, !getClickableState("p", 11))
+            }
+        }
+    },
+    resetDescription: "Change the energy's form for ",
     startData() { return {
         unlocked: true,
         points: new Decimal(0),
-        reactor: false,
         amtsacrificed: new Decimal(0),
         compressor: false,
-        amtcompressed: new Decimal(0)
+        amtcompressed: new Decimal(0),
     }},
     name: "Particles",
     color:() => "#FFFFFF",
@@ -142,15 +156,6 @@ addLayer("p", {
             title: "Fission Reactor",
             description: "Unlock the ability to split particles apart for a big energy gain buff",
             cost: new Decimal(250),
-            effect: function() {
-                if (player.p.amtsacrificed.lessThan(1)) {return 1}
-                if (hasUpgrade("p",31)) return player.p.amtsacrificed.log(1.001).times(10).pow(layers.a.effect())
-                if (hasUpgrade("p",24)) {
-                    return player.p.amtsacrificed.log(1.005).times(10).pow(layers.a.effect())
-                }
-                if (hasUpgrade("p",21)) return player.p.amtsacrificed.log(1.01).times(10).pow(layers.a.effect())
-                return player.p.amtsacrificed.log(1.05).times(10)
-            },
             unlocked:function() {return hasUpgrade("p",14)}
         },
         21: {
