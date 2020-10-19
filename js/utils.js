@@ -3,7 +3,11 @@
 function exponentialFormat(num, precision) {
 	let e = num.log10().floor()
 	let m = num.div(Decimal.pow(10, e))
-	return m.toStringWithDecimalPlaces(3)+"e"+e.toStringWithDecimalPlaces(0)
+	if(m.toStringWithDecimalPlaces(precision) == 10) {
+		m = new Decimal(1)
+		e = e.add(1)
+	}
+	return m.toStringWithDecimalPlaces(precision)+"e"+e.toStringWithDecimalPlaces(0)
 }
 
 function commaFormat(num, precision) {
@@ -34,7 +38,7 @@ function format(decimal, precision=2) {
 		var slog = decimal.slog()
 		if (slog.gte(1e6)) return "F" + format(slog.floor())
 		else return Decimal.pow(10, slog.sub(slog.floor())).toStringWithDecimalPlaces(3) + "F" + commaFormat(slog.floor(), 0)
-	} else if (decimal.gte("1e1000")) return (Math.floor(decimal.mantissa + 0.01) + ("e"+formatWhole(decimal.log10().floor())))
+	} else if (decimal.gte("1e1000")) return exponentialFormat(decimal, 0)
 	else if (decimal.gte(1e9)) return exponentialFormat(decimal, precision)
 	else if (decimal.gte(1e3)) return commaFormat(decimal, 0)
 	else return commaFormat(decimal, precision)
@@ -79,13 +83,19 @@ function startPlayerBase() {
 		keepGoing: false,
 		hasNaN: false,
 		hideChallenges: false,
-		points: new Decimal(10),
+		points: modInfo.initialStartPoints,
 		subtabs: {},
 	}
 }
 
 function getStartPlayer() {
 	playerdata = startPlayerBase()
+	
+	if (addedPlayerData) {
+		extradata = addedPlayerData()
+		for (thing in extradata)
+			playerdata[thing] = extradata[thing]
+	}
 	for (layer in layers){
 		playerdata[layer] = layers[layer].startData()
 		playerdata[layer].buyables = getStartBuyables(layer)
@@ -350,7 +360,7 @@ function milestoneShown(layer, id) {
 function respecBuyables(layer) {
 	if (!layers[layer].buyables) return
 	if (!layers[layer].buyables.respec) return
-	if (!confirm("Are you sure you want to respec? This will force you to do a \"" + (layers[layer].name ? layers[layer].name : layer) + "\" reset as well!")) return
+	if (!confirm("Are you sure you want to respec? This will force you to do a \"" + (tmp[layer].name ? tmp[layer].name : layer) + "\" reset as well!")) return
 	layers[layer].buyables.respec()
 	updateBuyableTemp(layer)
 }
@@ -409,6 +419,10 @@ function buyableEffect(layer, id){
 	return (tmp[layer].buyables[id].effect)
 }
 
+function clickableEffect(layer, id){
+	return (tmp[layer].clickables[id].effect)
+}
+
 function achievementEffect(layer, id){
 	return (tmp[layer].achievements[id].effect)
 }
@@ -435,7 +449,7 @@ function canAffordPurchase(layer, thing, cost) {
 
 function buyUpg(layer, id) {
 	if (!player[layer].unlocked) return
-	if (!layers[layer].upgrades[id].unlocked) return
+	if (!tmp[layer].upgrades[id].unlocked) return
 	if (player[layer].upgrades.includes(id)) return
 	let upg = tmp[layer].upgrades[id]
 	let cost = tmp[layer].upgrades[id].cost
@@ -496,10 +510,12 @@ function clickClickable(layer, id) {
 // Function to determine if the player is in a challenge
 function inChallenge(layer, id){
 	let challenge = player[layer].activeChallenge
-	if (challenge==toNumber(id)) return true
+	if (challenge == null) return
+	id = toNumber(id)
+	if (challenge==id) return true
 
 	if (layers[layer].challenges[challenge].countsAs)
-		return layers[layer].challenges[id].countsAs.includes(id)
+		return tmp[layer].challenges[id].countsAs.includes(id)
 }
 
 // ************ Misc ************
@@ -535,7 +551,7 @@ function nodeShown(layer) {
 }
 
 function layerunlocked(layer) {
-	return LAYERS.includes(layer) && (player[layer].unlocked || (tmp[layer].baseAmount.gte(tmp[layer].requires) && layers[layer].layerShown()))
+	return LAYERS.includes(layer) && (player[layer].unlocked || (tmp[layer].baseAmount.gte(tmp[layer].requires) && tmp[layer].layerShown))
 }
 
 function keepGoing() {

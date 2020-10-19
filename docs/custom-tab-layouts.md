@@ -38,6 +38,9 @@ These are the existing components, but you can create more in v.js:
 
 - main-display: The text that displays the main currency for the layer and its effects.
 
+- resource-display: The text that displays the currency that this layer is based on, as well as the best and/or total
+                    values for this layer's prestige currency (if they are put in startData for this layer)
+
 - prestige-button: The argument is a string that the prestige button should say before the amount of
                    currency you will gain. It can also be a function that returns updating text.
 
@@ -48,11 +51,16 @@ These are the existing components, but you can create more in v.js:
 
 - microtabs: Display a set of subtabs for an area. The argument is the name of the set of microtabs in the "microtabs" feature.
 
-- upgrade, milestone, chall, buyable, clickable, achievement: An individual upgrade, challenge, etc. The argument is the id.
-        This can be used if you want to have upgrades split up across multiple subtabs, for example.
-
 - bar: Display a bar. The argument is the id of the bar to display.
 
 - toggle: A toggle button that toggles a bool value. The data is a pair that identifies what bool to toggle, [layer, id]
 
+
+The rest of the components are sub-components. They can be used just like other components, but are typically part of another component.
+
+- upgrade, milestone, chall, buyable, clickable, achievement: An individual upgrade, challenge, etc. The argument is the id.
+        This can be used if you want to have upgrades split up across multiple subtabs, for example.
+
 - respec-button, master-button: The respec and master buttons for buyables and clickables, respectively.
+
+- sell-one, sell-all: The "sell one" and "sell all" for buyables, respectively. The argument is the id of the buyable.
