@@ -1,7 +1,7 @@
 let modInfo = {
-	name: "The ??? Tree",
-	id: "mymod",
-	pointsName: "points",
+	name: "The Prestige Forest",
+	id: "tpf",
+	pointsName: "energy",
 	discordName: "",
 	discordLink: "",
 	changelogLink: "https://github.com/Acamaeda/The-Modding-Tree/blob/master/changelog.md",
@@ -25,7 +25,7 @@ function getStartPoints(){
 
 // Determines if it should show points/sec
 function canGenPoints(){
-	return true
+	return hasUpgrade("p", 11)
 }
 
 // Calculate points/sec!
@@ -34,6 +34,10 @@ function getPointGen() {
 		return new Decimal(0)
 
 	let gain = new Decimal(1)
+	if(hasUpgrade("p",12)) gain = gain.times(upgradeEffect("p", 12))
+	if(hasUpgrade("p",13)) gain = gain.times(upgradeEffect("p", 13))
+	if(hasUpgrade("p",15)) gain = gain.times(clickableEffect("p", 11))
+	if(hasUpgrade("a",12)) gain = gain.times(upgradeEffect("a",12))
 	return gain
 }
 

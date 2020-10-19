@@ -287,12 +287,12 @@ function gameLoop(diff) {
 		if (layers[layer].update) layers[layer].update(diff);
 	}
 
-	if (player.p.reactor) {
+	if (getClickableState("p", 11)) {
 		if (!hasUpgrade("p", 35)) player.p.points = player.p.points.sub(player.p.points.div(20).times(diff))
 		player.p.amtsacrificed = player.p.amtsacrificed.add(player.p.points.div(20).times(diff))
 	}
 
-	if (player.p.compressor) {
+	if (getClickableState("p", 12)) {
 		if (!hasUpgrade("p", 35)) player.points = player.points.sub(player.points.div(2).times(diff))
 		player.p.amtcompressed = player.p.amtcompressed.add(player.p.points.div(2).times(diff))
 	}

@@ -1,20 +1,17 @@
 addLayer("p", {
-    milestones: {
-        0: {
-            title: "The Compressor",
-            effectDescription: "Allows you to activate the compressor, losing 50% of your energy per second but you gain a boost to particles based on total energy lost",
-            done: function() {return hasUpgrade("p", 25)},
-            unlocked: function() {return hasUpgrade("p", 25)},
-            toggles: [["p", "compressor"]],
-        }
-    },
     clickables: {
         rows: 1,
-        cols: 1,
+        cols: 2,
         11: {
             title: "The Reactor",
             unlocked: function() {return hasUpgrade("p", 15)},
-            display: function() {return "Allows you to activate the reactor, losing 5% of your particles per second but you gain a boost based on total particles lost."},
+            display: function() {
+                value = "Allows you to activate the reactor, losing 5% of your particles per second but you gain a boost based on total particles lost.\n" + "Currently: " + clickableEffect("p", 11)+ "\n "
+                if (typeof getClickableState("p", 11) == "undefined") {setClickableState("p", 11, true)}
+                if (getClickableState("p", 11)) {value += "On"}
+                else {value += "Off"}
+                return value
+            },
             effect: function() {
                 if (player.p.amtsacrificed.lessThan(1)) {return 1}
                 if (hasUpgrade("p",31)) return player.p.amtsacrificed.log(1.001).times(10).pow(layers.a.effect())
@@ -24,9 +21,50 @@ addLayer("p", {
                 if (hasUpgrade("p",21)) return player.p.amtsacrificed.log(1.01).times(10).pow(layers.a.effect())
                 return player.p.amtsacrificed.log(1.05).times(10)
             },
+            canClick: function() {
+                return true
+            },
             onClick: function() {
                 if (typeof getClickableState("p", 11) == "undefined") {setClickableState("p", 11, true)}
                 setClickableState("p", 11, !getClickableState("p", 11))
+            },
+            style: {
+                "height": "200px",
+                "width": "200px",
+                "border-radius": "25%",
+                "border": "2px solid",
+                "border-color": 'rgba(0, 0, 0, 0.125)',
+                "font-size": '10px'
+            }
+        },
+        12: {
+            title: "The Compressor",
+            display: function() {
+                value = "Allows you to activate the compressor, losing 50% of your energy per second but you gain a boost to particles based on total energy lost\n" + "Currently: " + clickableEffect("p", 12)+ "\n "
+                if (typeof getClickableState("p", 12) == "undefined") {setClickableState("p", 12, true)}
+                if (getClickableState("p", 12)) {value += "On"}
+                else {value += "Off"}
+                return value
+            },
+            effect: function () {
+                if (hasUpgrade("p",31)) return player.p.amtcompressed.add(1).log(1.8).add(2).pow(layers.a.effect())
+                return player.p.amtcompressed.add(1).log(2).add(2).pow(layers.a.effect())
+            },
+            unlocked: function() {return hasUpgrade("p", 25)},
+            canClick: function() {
+                return true
+            },
+            onClick: function() {
+                if (typeof getClickableState("p", 12) == "undefined") {setClickableState("p", 12, true)}
+                setClickableState("p", 12, !getClickableState("p", 12))
+            },
+            style: {
+                "height": "200px",
+                "width": "200px",
+                "border-radius": "25%",
+                "border": "2px solid",
+                "border-color": 'rgba(0, 0, 0, 0.125)',
+                "font-size": '10px'
             }
         }
     },
@@ -37,6 +75,7 @@ addLayer("p", {
         amtsacrificed: new Decimal(0),
         compressor: false,
         amtcompressed: new Decimal(0),
+        clickables: {11: false, 12: false}
     }},
     name: "Particles",
     color:() => "#FFFFFF",
@@ -53,7 +92,7 @@ addLayer("p", {
     gainMult() {
         let value = new Decimal(1)
         if (hasUpgrade("p", 14)) value = value.times(new Decimal(upgradeEffect("p", 14)))
-        if (hasUpgrade("p",25)) value = value.times(upgradeEffect("p",25))
+        if (hasUpgrade("p",25)) value = value.times(clickableEffect("p",12))
         if (hasUpgrade("a",11)) value = value.times(upgradeEffect("a", 11))
         return value
     },
@@ -186,10 +225,6 @@ addLayer("p", {
             title: "The Compresser",
             description: "Compresses Your Particles",
             cost: new Decimal("1e24"),
-            effect: function () {
-                if (hasUpgrade("p",31)) return player.p.amtcompressed.add(1).log(1.8).add(2).pow(layers.a.effect())
-                return player.p.amtcompressed.add(1).log(2).add(2).pow(layers.a.effect())
-            },
             unlocked:function() {return ((player.a.best.gte(1))&&(hasUpgrade("p",24)))}
         },
         31: {
