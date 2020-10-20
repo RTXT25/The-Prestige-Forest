@@ -2,7 +2,7 @@ addLayer("a",{
     startData() { return {
         unlocked: function(){return (hasUpgrade("p", 15)||(player.a.best.gte(1)))},
         points: new Decimal(0),
-        best: 0
+        best: new Decimal(0)
     }},
     resetDescription: "Compress energy for ",
     resource: "atoms",
@@ -23,7 +23,7 @@ addLayer("a",{
     baseResource: "energy",
     canBuyMax: function() {return false},
 
-    layerShown() {return (hasUpgrade("p", 15)||(player.a.best.gte(1)))}, 
+    layerShown() {return (hasUpgrade("p", 15)||(player.a.best.gte(1))||(player.c.best.gte(1)))}, 
     baseAmount() {return (player.points)},
     milestones: {
         0: {
@@ -110,4 +110,10 @@ addLayer("a",{
         if (hasMilestone("a",3)) return ("raising the reactor and compressor buff by " + this.effect().toString())
     },
     branches: ["c"],
+    doReset(resettingLayer) {
+        if (resettingLayer == "c") {
+            layerDataReset("a")
+            layerDataReset("p")
+        }
+    }
 })

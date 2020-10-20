@@ -75,7 +75,8 @@ addLayer("p", {
         amtsacrificed: new Decimal(0),
         compressor: false,
         amtcompressed: new Decimal(0),
-        clickables: {11: false, 12: false}
+        clickables: {11: false, 12: false},
+        best: new Decimal(0)
     }},
     name: "Particles",
     color:() => "#FFFFFF",
@@ -265,7 +266,7 @@ addLayer("p", {
     doReset(resettingLayer) {
         if (resettingLayer == "a") {
             if (hasMilestone("a", 2)) {
-                layerDataReset("p", ["upgrades","reactor","compressor"])
+                layerDataReset("p", ["upgrades","clickables"])
             }
             else {
                 layerDataReset("p")
