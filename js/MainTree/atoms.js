@@ -11,7 +11,7 @@ addLayer("a",{
     requires:() => new Decimal("1e11"),
     type: "static",
     exponent: 1,
-    base: new Decimal(1e15),
+    base: new Decimal(1e10),
     gainMult() {
         let value = new Decimal(1)
         return value
