@@ -4,7 +4,7 @@ addLayer("p", {
         cols: 2,
         11: {
             title: "The Reactor",
-            unlocked: function() {return hasUpgrade("p", 15)},
+            unlocked: function() {return true},
             display: function() {
                 value = "Allows you to activate the reactor, losing 5% of your particles per second but you gain a boost based on total particles lost.\n" + "Currently: " + clickableEffect("p", 11)+ "\n "
                 if (typeof getClickableState("p", 11) == "undefined") {setClickableState("p", 11, true)}
@@ -16,10 +16,10 @@ addLayer("p", {
                 if (player.p.amtsacrificed.lessThan(1)) {return 1}
                 if (hasUpgrade("p",31)) return player.p.amtsacrificed.log(1.001).times(10).pow(layers.a.effect())
                 if (hasUpgrade("p",24)) {
-                    return player.p.amtsacrificed.log(1.005).times(10).pow(layers.a.effect())
+                    return player.p.amtsacrificed.log(0.5).times(10).pow(layers.a.effect())
                 }
                 if (hasUpgrade("p",21)) return player.p.amtsacrificed.log(1.01).times(10).pow(layers.a.effect())
-                return player.p.amtsacrificed.log(1.05).times(10)
+                return player.p.amtsacrificed.log(0.05).times(10)
             },
             canClick: function() {
                 return true
