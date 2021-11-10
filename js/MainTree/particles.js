@@ -71,7 +71,7 @@ addLayer("p", {
     resetDescription: "Change the energy's form for ",
     startData() { return {
         unlocked: true,
-        points: new Decimal(0),
+        points: new Decimal(696969696696969696969696969696969696969696969),
         amtsacrificed: new Decimal(0),
         compressor: false,
         amtcompressed: new Decimal(0),
