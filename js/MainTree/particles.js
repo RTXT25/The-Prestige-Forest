@@ -16,10 +16,10 @@ addLayer("p", {
                 if (player.p.amtsacrificed.lessThan(1)) {return 1}
                 if (hasUpgrade("p",31)) return player.p.amtsacrificed.log(1.001).times(10).pow(layers.a.effect())
                 if (hasUpgrade("p",24)) {
-                    return player.p.amtsacrificed.log(0.5).times(10).pow(layers.a.effect())
+                    return player.p.amtsacrificed.log(1.005).times(1).pow(layers.a.effect())
                 }
-                if (hasUpgrade("p",21)) return player.p.amtsacrificed.log(1.01).times(10).pow(layers.a.effect())
-                return player.p.amtsacrificed.log(0.05).times(10)
+                if (hasUpgrade("p",21)) return player.p.amtsacrificed.log(1.01).times(1).pow(layers.a.effect())
+                return player.p.amtsacrificed.log(1.05).times(1)
             },
             canClick: function() {
                 return true
