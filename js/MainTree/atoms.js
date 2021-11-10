@@ -42,14 +42,14 @@ addLayer("a",{
             done: function() {return player.a.best.gte(3)},
         },
         3: {
-            requirementDescription: "5 Atoms",
+            requirementDescription: "4 Atoms",
             effectDescription: "Unlock the next atom upgrade and the atom buff",
-            done: function() {return player.a.best.gte(5)},
+            done: function() {return player.a.best.gte(4)},
         },
         4: {
-            requirementDescription: "10 Atoms",
+            requirementDescription: "5 Atoms",
             effectDescription: "Gain 100% of particle gain every second and unlock an atom upgrade",
-            done: function() {return player.a.best.gte(10)},
+            done: function() {return player.a.best.gte(5)},
         },
     },
     tabFormat: {
