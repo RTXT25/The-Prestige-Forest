@@ -1,6 +1,6 @@
 let modInfo = {
 	name: "The Prestige Forest",
-	id: "tpf",
+	id: "tpfbf",
 	pointsName: "energy",
 	discordName: "",
 	discordLink: "",
